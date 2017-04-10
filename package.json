@@ -1,0 +1,33 @@
+{
+  "name": "fl-message-notifications",
+  "description": "Get notified of new messages on the main tab of Fallen London",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "<sdob@cs.ucc.ie>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.16.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2105": "^0.0.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "jquery": "3",
+    "js-md5": "^0.4.2",
+    "mutation-summary": "^0.1.1",
+    "node-sass": "^4.5.2",
+    "rimraf": "^2.6.1",
+    "sass-loader": "^6.0.3",
+    "webpack": "2",
+    "zip-webpack-plugin": "^1.1.0"
+  },
+  "scripts": {
+    "build": "yarn cleanup && webpack",
+    "cleanup": "rimraf dist/ && rimraf build/",
+    "dist": "rimraf dist/ && NODE_ENV='production' webpack -p",
+    "watch": "yarn cleanup && webpack --progress --watch"
+  }
+}
