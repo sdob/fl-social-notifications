@@ -1,10 +1,8 @@
-import axios from 'axios';
 import $ from 'jquery';
 import md5 from 'js-md5';
 import MutationSummary from 'mutation-summary';
 
 import { BADGE_ID, DELAY, INBOX_ID, MESSAGES_TAB_ID } from './constants';
-import * as urls from './urls';
 import fetchMessages from './fetch-messages';
 import setBadgeVisibility from './set-badge-visibility';
 import log from './log';
@@ -49,7 +47,7 @@ function hashMessages($messages) {
   // Hashing a message's HTML content is a quick and dirty way of
   // giving it a unique key, since each div.feedmessage has a unique ID
   // (e.g., "feedmessage41120633").
-  $messages.each(function() {
+  $messages.each(function hashMessage() {
     // Hash the HTML
     const hash = md5($(this).html());
     // If it's not already a key, then add it with an 'unread' flag.

@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import axios from 'axios';
-import md5 from 'js-md5';
 import log from './log';
 import * as urls from './urls';
 

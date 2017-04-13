@@ -20,7 +20,7 @@ export default function setBadgeVisibility({ messageHashes }) {
 
   function showBadge() {
     // Show the notification badge with the number of unread messages
-    $(`#${BADGE_ID}`).text('' + unreadMessages);
+    $(`#${BADGE_ID}`).text(unreadMessages.toString());
   }
 
   function hideBadge() {

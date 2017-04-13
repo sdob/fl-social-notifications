@@ -1,1 +1,1 @@
-export const MESSAGES = '/Me/Landing';
+export default '/Me/Landing';
