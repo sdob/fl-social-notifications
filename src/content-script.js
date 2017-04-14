@@ -44,6 +44,13 @@ function fetchAndSetBadge() {
 }
 
 function hashMessages($messages) {
+  // If $messages is falsy (probably undefined), then there's likely
+  // been a network error, and we can't do anything about that. Just
+  // fail gracefully.
+  if (!$messages) {
+    return;
+  }
+
   // Hashing a message's HTML content is a quick and dirty way of
   // giving it a unique key, since each div.feedmessage has a unique ID
   // (e.g., "feedmessage41120633").

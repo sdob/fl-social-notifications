@@ -1,12 +1,12 @@
 import $ from 'jquery';
 import axios from 'axios';
 import log from './log';
-import * as urls from './urls';
+import url from './urls';
 
 export default function fetchMessages() {
   log('Fetching Messages tab');
   // Make the request
-  return axios.get(urls.MESSAGES)
+  return axios.get(url)
     .then(handleResponse)
     .catch(handleError);
 
