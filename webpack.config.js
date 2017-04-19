@@ -5,11 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 const ZipPlugin = require('zip-webpack-plugin');
 
-process.traceDeprecation = true;
-
-// We need this for a few things
-// const name = require(path.join(__dirname, 'package.json')).name;
-// const version = require(path.join(__dirname, 'package.json')).version;
+// We need these for a few things
 const { name, version } = require(path.join(__dirname, 'package.json'));
 
 // Copy the manifest.json, inserting the current version as we go
