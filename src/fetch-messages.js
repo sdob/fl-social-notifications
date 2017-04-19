@@ -23,22 +23,20 @@ export default function fetchMessages(retry) {
     return $received.children('.feedmessage');
   }
 
-  // Handle errors
   function handleError(error) {
     const { response } = error;
-    // We have a response from the server, so there's a network connection there
+    // If we have a response from the server, then we know we have a network connection,
     // and it's probably not our fault. FL returns 404s and 503s every now and then;
-    // we'll just reschedule a retry in a minute (if we're not retrying already)
-    if (response && !retry) {
-      if ([
-        HTTP.NOT_FOUND,
-        HTTP.SERVICE_UNAVAILABLE,
-      ].includes(response.status)) {
-        return setTimeout(() => fetchMessages(true), 60 * 1000);
+    // we'll just reschedule a retry in a minute, if we're not retrying already.
+    if (response) {
+      if (HTTP.NOT_FOUND === response.status || response.status >= 500) {
+        if (!retry) {
+          setTimeout(() => fetchMessages(true), 60 * 1000);
+        }
+      } else {
+        // If we've received another kind of error, then we want it logged
+        console.error(error);
       }
-      // Otherwise, we've done our best; we'll just wait for the next
-      // tick
     }
-    return console.error(error);
   }
 }
