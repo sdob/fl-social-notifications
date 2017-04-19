@@ -2,7 +2,7 @@ import $ from 'jquery';
 import log from './log';
 import { BADGE_ID } from './constants';
 
-export default function setBadgeVisibility({ messageHashes }) {
+export default function updateBadge({ messageHashes }) {
   // If we have unread messages, then show the badge; otherwise, hide it
   const unreadMessages = enumerateUnreadMessages();
 

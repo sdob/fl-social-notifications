@@ -4,7 +4,7 @@ import MutationSummary from 'mutation-summary';
 
 import { BADGE_ID, DELAY, INBOX_ID, MESSAGES_TAB_ID } from './constants';
 import fetchMessages from './fetch-messages';
-import setBadgeVisibility from './set-badge-visibility';
+import updateBadge from './update-badge';
 import log from './log';
 import './styles.scss';
 
@@ -40,7 +40,7 @@ function fetchAndSetBadge() {
     // Update our hash
     .then(hashMessages)
     // set the notification badge number and visibility
-    .then(() => setBadgeVisibility({ messageHashes }));
+    .then(() => updateBadge({ messageHashes }));
 }
 
 function hashMessages($messages) {
@@ -99,7 +99,7 @@ function observeMessagesTab() {
       });
 
       // Set badge visibility (to invisible)
-      setBadgeVisibility({ messageHashes });
+      updateBadge({ messageHashes });
     }
   }
 }
