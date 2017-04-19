@@ -72,8 +72,8 @@ function insertNotificationBadge() {
   // with respect to it. We're borrowing the .qq class from
   // the main Fallen London stylesheet with some minor modifications. (Thanks!)
   $(`#${MESSAGES_TAB_ID}`)
-    .addClass('flms-position-relative')
-    .append($(`<div id="${BADGE_ID}" class="qq flms-badge" />`));
+    .addClass('flmn-position-relative')
+    .append($(`<div id="${BADGE_ID}" class="qq flmn-badge" />`));
 }
 
 function observeMessagesTab() {
