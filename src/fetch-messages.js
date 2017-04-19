@@ -3,8 +3,9 @@ import axios from 'axios';
 import HTTP from 'http-status';
 import log from './log';
 import url from './urls';
+import { INBOX_ID } from './constants';
 
-export default function fetchMessages({ retry }) {
+export default function fetchMessages(retry) {
   log('Fetching Messages tab');
 
   // Make the request
@@ -17,7 +18,7 @@ export default function fetchMessages({ retry }) {
     const { data } = response;
     // We're only looking for messages that have invitations
     // (i.e., messages from another user to us)
-    const $received = $(data).find('#FeedMessagesWithInvitations');
+    const $received = $(data).find(`#${INBOX_ID}`);
 
     return $received.children('.feedmessage');
   }
@@ -33,7 +34,7 @@ export default function fetchMessages({ retry }) {
         HTTP.NOT_FOUND,
         HTTP.SERVICE_UNAVAILABLE,
       ].includes(response.status)) {
-        return setTimeout(() => fetchMessages({ retry: true }), 60 * 1000);
+        return setTimeout(() => fetchMessages(true), 60 * 1000);
       }
       // Otherwise, we've done our best; we'll just wait for the next
       // tick
