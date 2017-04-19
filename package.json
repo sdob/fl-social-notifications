@@ -20,6 +20,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "extract-text-webpack-plugin": "^2.1.0",
+    "http-status": "^1.0.1",
     "jquery": "3",
     "js-md5": "^0.4.2",
     "mutation-summary": "^0.1.1",
