@@ -47,7 +47,7 @@ function hashMessages($messages) {
   // If $messages is falsy (probably undefined), then there's likely
   // been a network error, and we can't do anything about that. Just
   // fail gracefully.
-  if (!$messages) {
+  if (!($messages && $messages.length)) {
     return;
   }
 
