@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Fallen London Message Notifications",
-  "description": "This extension for Fallen London notifies you when new messages arrive.",
+  "description": "This extension for Fallen London periodically checks your 'Messages' tab for new messages.",
   "permissions": [
     "storage"
   ],
