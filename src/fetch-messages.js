@@ -13,16 +13,20 @@ export default function fetchMessages(retry) {
     .then(handleResponse)
     .catch(handleError);
 
-  // Handle successes
+  // Handle successes; extract the messages with invitations and
+  // return them
   function handleResponse(response) {
     const { data } = response;
     // We're only looking for messages that have invitations
     // (i.e., messages from another user to us)
-    const $received = $(data).find(`#${INBOX_ID}`);
-
-    return $received.children('.feedmessage');
+    return $(data).find(`#${INBOX_ID} .feedmessage`);
   }
 
+  // Handle errors. These are almost certainly down to intermittent
+  // flakiness on the FL servers (404/503), in which case we can schedule
+  // exactly one more attempt; if there's no response, then it's likely that
+  // the user's lost connectivity (in which case there's nothing we can do,
+  // and logging errors isn't terribly helpful).
   function handleError(error) {
     const { response } = error;
     // If we have a response from the server, then we know we have a network connection,
@@ -33,9 +37,6 @@ export default function fetchMessages(retry) {
         if (!retry) {
           setTimeout(() => fetchMessages(true), 60 * 1000);
         }
-      } else {
-        // If we've received another kind of error, then we want it logged
-        console.error(error);
       }
     }
   }
