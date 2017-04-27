@@ -5,7 +5,7 @@
   "permissions": [
     "storage"
   ],
-  "version": VERSION,
+  "version": "$VERSION",
   "content_scripts": [
     {
       "matches": ["http://fallenlondon.storynexus.com/Gap/Load*"],
