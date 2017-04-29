@@ -4,28 +4,22 @@ import { BADGE_ID } from './constants';
 
 export default function updateBadge({ messageHashes }) {
   // If we have unread messages, then show the badge; otherwise, hide it
-  const unreadMessages = enumerateUnreadMessages();
+  const unreadMessages = enumerateUnreadMessages(messageHashes);
+  setBadgeContents(unreadMessages);
 
-  if (unreadMessages > 0) {
-    log('Unread messages!');
-    showBadge();
-  } else {
-    hideBadge();
-  }
-
-  function enumerateUnreadMessages() {
-    // Return the number of unread messages
-    return Object.keys(messageHashes).filter(x => messageHashes[x]).length;
-  }
-
-  function showBadge() {
-    // Show the notification badge with the number of unread messages
-    $(`#${BADGE_ID}`).text(unreadMessages.toString());
-  }
-
-  function hideBadge() {
+  function setBadgeContents(unreadMessages) {
+    // If we have unread messages, then show the notification badge with
+    // the number of unread messages
+    if (unreadMessages > 0) {
+      // Show the notification badge with the number of unread messages
+      return $(`#${BADGE_ID}`).text(unreadMessages.toString());
+    }
     // Clear the notification badge (which will hide it)
     $(`#${BADGE_ID}`).text('');
   }
 }
 
+function enumerateUnreadMessages(messageHashes) {
+  // Return the number of unread messages
+  return Object.keys(messageHashes).filter(x => messageHashes[x]).length;
+}
