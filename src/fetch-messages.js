@@ -2,14 +2,14 @@ import $ from 'jquery';
 import axios from 'axios';
 import HTTP from 'http-status';
 import log from './log';
-import url from './urls';
+import MESSAGES_TAB_URL from './urls';
 import { INBOX_ID } from './constants';
 
 export default function fetchMessages(retry) {
   log('Fetching Messages tab');
 
   // Make the request
-  return axios.get(url)
+  return axios.get(MESSAGES_TAB_URL)
     .then(handleResponse)
     .catch(handleError);
 
