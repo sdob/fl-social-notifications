@@ -13,8 +13,8 @@ export default function fetchMessages(retry) {
     .then(handleResponse)
     .catch(handleError);
 
-  // Handle successes; extract the messages with invitations and
-  // return them
+  // Handle the HTML in a successful response; extract the messages with
+  // invitations and return them
   function handleResponse({ data }) {
     // We're only looking for messages that have invitations
     // (i.e., messages from another user to us)
@@ -22,17 +22,17 @@ export default function fetchMessages(retry) {
   }
 
   // Handle errors. These are almost certainly down to intermittent
-  // flakiness on the FL servers (404/503), in which case we can schedule
-  // exactly one more attempt; if there's no response, then it's likely that
-  // the user's lost connectivity (in which case there's nothing we can do,
-  // and logging errors isn't terribly helpful).
+  // flakiness on the FL servers (status 404/503), in which case we'll schedule
+  // exactly one more attempt. If there's no response, then it's likely that
+  // the user's lost connectivity, and we'll just ignore it.
   function handleError(error) {
     const { response } = error;
     // If we have a response from the server, then we know we have a network connection,
     // and it's probably not our fault. FL returns 404s and 503s every now and then;
-    // we'll just reschedule a retry in a minute, if we're not retrying already.
+    // we'll just reschedule a retry in a minute.
     if (response) {
       if (HTTP.NOT_FOUND === response.status || response.status >= 500) {
+        // Only reschedule once (otherwise, stick to the normal interval).
         if (!retry) {
           setTimeout(() => fetchMessages(true), 60 * 1000);
         }
