@@ -15,8 +15,7 @@ export default function fetchMessages(retry) {
 
   // Handle successes; extract the messages with invitations and
   // return them
-  function handleResponse(response) {
-    const { data } = response;
+  function handleResponse({ data }) {
     // We're only looking for messages that have invitations
     // (i.e., messages from another user to us)
     return $(data).find(`#${INBOX_ID} .feedmessage`);
