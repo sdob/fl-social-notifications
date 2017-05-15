@@ -2,9 +2,9 @@ import $ from 'jquery';
 import log from './log';
 import { BADGE_ID } from './constants';
 
-export default function updateBadge({ messageHashes }) {
+export default function updateBadge({ messageIDs }) {
   // If we have unread messages, then show the badge; otherwise, hide it
-  const unreadMessages = enumerateUnreadMessages(messageHashes);
+  const unreadMessages = enumerateUnreadMessages(messageIDs);
   setBadgeContents(unreadMessages);
 
   function setBadgeContents(unreadMessages) {
@@ -19,7 +19,7 @@ export default function updateBadge({ messageHashes }) {
   }
 }
 
-function enumerateUnreadMessages(messageHashes) {
+function enumerateUnreadMessages(messageIDs) {
   // Return the number of unread messages
-  return Object.keys(messageHashes).filter(x => messageHashes[x]).length;
+  return Object.keys(messageIDs).filter(x => messageIDs[x]).length;
 }

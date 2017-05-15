@@ -8,14 +8,14 @@ import updateBadge from './update-badge';
 import log from './log';
 import './styles.scss';
 
-// We store messages in the inbox as a [hash => boolean] map.
+// We store messages in the inbox as an [ID => boolean] map.
 // Messages are either read or unread. On page load, we'll just
 // assume that the user wants to know whether they've got any
 // mail or not, so everything will be set to 'unread' on page
 // load/refresh (incidentally saving us from having to persist stuff).
 // When the user manually clicks over the 'Messages' tab,
 // we'll flag the messages as 'read'.
-const messageHashes = {};
+const messageIDs = {};
 
 // Kick everything off
 initialize();
@@ -39,13 +39,13 @@ function initialize() {
 function fetchAndThenSetBadge() {
   // Retrieve messages
   fetchMessages()
-    // Update our map of hashes
-    .then(hashMessages)
+    // Update our store
+    .then(updateStore)
     // set the notification badge number and visibility
-    .then(() => updateBadge({ messageHashes }));
+    .then(() => updateBadge({ messageIDs }));
 }
 
-function hashMessages($messages) {
+function updateStore($messages) {
   // If $messages is falsy (probably undefined), then there's likely
   // been a network error, and we can't do anything about that. Just
   // fail gracefully.
@@ -53,17 +53,14 @@ function hashMessages($messages) {
     return;
   }
 
-  // MD5ing each 's HTML content is a quick and dirty way of
-  // giving it a unique key, since each div.feedmessage has a unique ID
-  // (e.g., "feedmessage41120633").
-  $messages.each(function hashMessage() {
-    // Hash the HTML
-    const hash = md5($(this).html());
-    // If it's not already a key, then add it with an 'unread' flag.
-    // If it is a key, it's already either read (false) or unread (true),
-    // but either way we know about it and can ignore it.
-    if (messageHashes[hash] === undefined) {
-      messageHashes[hash] = true;
+  $messages.each(function extractID() {
+    // Extract the message ID
+    const id = $(this).attr('id');
+    // If the ID isn't already a key, then add it with an 'unread' flag.
+    // If it is a key, then it's already either read (false) or unread (true),
+    // but either way we know about it and don't have to update the map.
+    if (messageIDs[id] === undefined) {
+      messageIDs[id] = true;
     }
   });
 }
@@ -74,8 +71,8 @@ function insertNotificationBadge() {
   // with respect to it. We're repurposing the .qq class from
   // the main Fallen London stylesheet with some minor modifications.
   $(`#${MESSAGES_TAB_ID}`)
-    .addClass('flmn-position-relative')
-    .append($(`<div id="${BADGE_ID}" class="qq flmn-badge" />`));
+    .addClass('flsn-position-relative')
+    .append($(`<div id="${BADGE_ID}" class="qq flsn-badge" />`));
 }
 
 function observeMessagesTab() {
@@ -96,12 +93,12 @@ function observeMessagesTab() {
     // Check for the existence of the message inbox
     if ($(`#${INBOX_ID}`).length) {
       // We are on the Messages tab; set all messages to read
-      Object.keys(messageHashes).forEach((k) => {
-        messageHashes[k] = false;
+      Object.keys(messageIDs).forEach((k) => {
+        messageIDs[k] = false;
       });
 
       // Set badge visibility (to invisible)
-      updateBadge({ messageHashes });
+      updateBadge({ messageIDs });
     }
   }
 }
