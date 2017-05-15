@@ -1,5 +1,5 @@
 // The ID for our DOM element
-export const BADGE_ID = 'js-flmn-badge';
+export const BADGE_ID = 'js-flsn-badge';
 
 // The ID of the inbox side of the MESSAGES tab content
 export const INBOX_ID = 'FeedMessagesWithInvitations';

@@ -1,6 +1,6 @@
 {
-  "name": "fl-message-notifications",
-  "description": "Get notified of new messages on the main tab of Fallen London",
+  "name": "fl-social-notifications",
+  "description": "Get notified of new social invitations in Fallen London",
   "version": "1.1.0",
   "main": "index.js",
   "author": "<sdob@cs.ucc.ie>",
