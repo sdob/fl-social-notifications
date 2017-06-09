@@ -4,18 +4,10 @@ import MutationSummary from 'mutation-summary';
 
 import { BADGE_ID, DELAY, INBOX_ID, MESSAGES_TAB_ID } from './constants';
 import fetchMessages from './fetch-messages';
-import updateBadge from './update-badge';
+import insertNotificationBadge from './insert-notification-badge';
 import log from './log';
+import updateBadge from './update-badge';
 import './styles.scss';
-
-// We store messages in the inbox as an [ID => boolean] map.
-// Messages are either read or unread. On page load, we'll just
-// assume that the user wants to know whether they've got any
-// mail or not, so everything will be set to 'unread' on page
-// load/refresh (incidentally saving us from having to persist stuff).
-// When the user manually clicks over the 'Messages' tab,
-// we'll flag the messages as 'read'.
-const messageIDs = {};
 
 // Kick everything off
 initialize();
@@ -23,58 +15,52 @@ initialize();
 function initialize() {
   log('Initializing');
 
-  // Add the DOM element for the notification
+  // Add the DOM element for the notification badge
   insertNotificationBadge();
 
-  // Make an initial call to the FL servers
-  fetchAndThenSetBadge();
+  // Make an initial call to the FL servers and update the badge
+  fetchAndUpdateBadge();
 
   // Check every 5 minutes
-  setInterval(fetchAndThenSetBadge, DELAY);
+  setInterval(fetchAndUpdateBadge, DELAY);
 
-  // Watch for when we click over to the 'Messages' tab
+  // Watch for when we click over to the 'Messages' tab (we will clear
+  // the notification badge and set all messages to 'read')
   observeMessagesTab();
 }
 
-function fetchAndThenSetBadge() {
-  // Retrieve messages
-  fetchMessages()
-    // Update our store
-    .then(updateStore)
-    // set the notification badge number and visibility
-    .then(() => updateBadge({ messageIDs }));
+// Return an array of the ID attribute of each $element passed in
+function extractIDs($elements) {
+  log('extracting IDs from');
+  console.log($elements);
+  if (!$elements) {
+    return [];
+  }
+  return $elements.map(function() { return $(this).attr('id'); }).get();
 }
 
-function updateStore($messages) {
-  // If $messages is falsy (probably undefined), then there's likely
-  // been a network error, and we can't do anything about that. Just
-  // fail gracefully.
-  if (!($messages && $messages.length)) {
-    return;
-  }
-
-  $messages.each(function extractID() {
-    // Extract the message ID
-    const id = $(this).attr('id');
-    // If the ID isn't already a key, then add it with an 'unread' flag.
-    // If it is a key, then it's already either read (false) or unread (true),
-    // but either way we know about it and don't have to update the map.
-    if (messageIDs[id] === undefined) {
-      messageIDs[id] = true;
-    }
+// Fetch messages from the server then update the notification badge
+function fetchAndUpdateBadge() {
+  log('Fetching and updating');
+  fetchMessages()
+  .then(extractIDs)
+  .then((messageIDs) => {
+    // Retrieve the list of read messages from storage; if a message ID isn't
+    // in it, then it's new
+    chrome.storage.local.get(null, ({ storedReadMessages }) => {
+      // storedReadMessages is undefined on first run
+      const readMessages = storedReadMessages || [];
+      // Messages are new if they aren't in the read messages store
+      const nNewMessages = messageIDs.filter(id => !readMessages.includes(id)).length;
+      log(`nNewMessages: ${nNewMessages}`);
+      // Update the notification badge
+      updateBadge(nNewMessages);
+    });
   });
 }
 
-function insertNotificationBadge() {
-  // We need to make the 'MESSAGES' tab relatively positioned
-  // so that our notification badge can be absolutely positioned
-  // with respect to it. We're repurposing the .qq class from
-  // the main Fallen London stylesheet with some minor modifications.
-  $(`#${MESSAGES_TAB_ID}`)
-    .addClass('flsn-position-relative')
-    .append($(`<div id="${BADGE_ID}" class="qq flsn-badge" />`));
-}
-
+// Watch the #mainContentViaAjax element to see if we're on the MESSAGES tab
+// and if so update both the notification badge and the list of read messages
 function observeMessagesTab() {
   // We want to clear the notifications badge when the user clicks
   // over to the MESSAGES tab.
@@ -87,18 +73,16 @@ function observeMessagesTab() {
     callback,
   });
 
-  // Check whether we're on the MESSAGES tab; if so, then set
-  // all messages to 'read', and hide the badge
+  // If we have an #INBOX_ID div, then we're on the MESSAGES tab
   function callback() {
-    // Check for the existence of the message inbox
     if ($(`#${INBOX_ID}`).length) {
-      // We are on the Messages tab; set all messages to read
-      Object.keys(messageIDs).forEach((k) => {
-        messageIDs[k] = false;
-      });
-
-      // Set badge visibility (to invisible)
-      updateBadge({ messageIDs });
+      // Set the stored list of read messages
+      // to whatever's here --- any stale message IDs in the store have been
+      // dealt with
+      const $messageDivs = $(`div#${INBOX_ID} div.feedmessage`);
+      const messageIDs = extractIDs($messageDivs);
+      chrome.storage.local.set({ storedReadMessages: messageIDs });
+      updateBadge(0);
     }
   }
 }

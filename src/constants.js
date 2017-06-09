@@ -8,4 +8,4 @@ export const INBOX_ID = 'FeedMessagesWithInvitations';
 export const MESSAGES_TAB_ID = 'homeTab';
 
 // Delay between checks, in ms (5 minutes)
-export const DELAY = 1000 * 30 * 5;
+export const DELAY = 1000 * 60 * 1;
