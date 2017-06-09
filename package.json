@@ -33,7 +33,7 @@
   "scripts": {
     "build": "yarn cleanup && webpack",
     "cleanup": "rimraf dist/ && rimraf build/",
-    "dist": "rimraf dist/ && NODE_ENV='production' webpack -p",
+    "dist": "rimraf dist/*.zip && NODE_ENV='production' webpack -p",
     "lint": "eslint src/**/*.js",
     "watch": "yarn cleanup && webpack --progress --watch"
   }
