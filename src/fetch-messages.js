@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import axios from 'axios';
 import HTTP from 'http-status';
+
 import log from './log';
 import MESSAGES_TAB_URL from './urls';
 import { INBOX_ID } from './constants';
