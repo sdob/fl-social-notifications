@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import md5 from 'js-md5';
 import MutationSummary from 'mutation-summary';
 
 import { BADGE_ID, DELAY, INBOX_ID, MESSAGES_TAB_ID } from './constants';
