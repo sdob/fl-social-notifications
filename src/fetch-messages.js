@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import axios from 'axios';
 import HTTP from 'http-status';
 
 import log from './log';
@@ -9,14 +8,17 @@ import { INBOX_ID } from './constants';
 export default function fetchMessages(retry) {
   log('Fetching Messages tab');
 
+  const dataType = 'html';
+  const url = MESSAGES_TAB_URL;
+
   // Make the request
-  return axios.get(MESSAGES_TAB_URL)
+  return $.ajax({ dataType, url })
     .then(handleResponse)
     .catch(handleError);
 
   // Handle the HTML in a successful response; extract the messages with
   // invitations and return them
-  function handleResponse({ data }) {
+  function handleResponse(data) {
     // We're only looking for messages that have invitations
     // (i.e., messages from another user to us)
     return $(data).find(`#${INBOX_ID} .feedmessage`);

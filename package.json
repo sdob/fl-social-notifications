@@ -6,7 +6,6 @@
   "author": "<sdob@cs.ucc.ie>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.16.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
     "babel-preset-es2015": "^6.24.1",
