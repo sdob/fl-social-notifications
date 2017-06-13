@@ -1,7 +1,7 @@
 {
   "name": "fl-social-notifications",
   "description": "Get notified of new social invitations in Fallen London",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "index.js",
   "author": "<sdob@cs.ucc.ie>",
   "license": "MIT",
@@ -22,7 +22,6 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "http-status": "^1.0.1",
     "jquery": "3",
-    "js-md5": "^0.4.2",
     "mutation-summary": "^0.1.1",
     "node-sass": "^4.5.2",
     "rimraf": "^2.6.1",
