@@ -31,7 +31,6 @@ function initialize() {
 // Return an array of the ID attribute of each $element passed in
 function extractIDs($elements) {
   log('extracting IDs from');
-  console.log($elements);
   if (!$elements) {
     return [];
   }
